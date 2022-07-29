@@ -20,7 +20,11 @@ const people = [
   { id: 5, name: "Tanya Fox" },
   { id: 6, name: "Hellen Schmidt" },
 ];
-
+const cat = [
+  { id: 1, name: "Bug" },
+  { id: 2, name: "Task" },
+  { id: 3, name: "Story" },
+];
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -60,12 +64,24 @@ const TodoItem = ({
 }) => {
   const [selected, setSelected] = useState(people[0]);
   const [query, setQuery] = useState("");
+  const [selectedcat, setSelectedcat] = useState(cat[0]);
+  const [querycat, setQuerycat] = useState("");
 
   const filteredPeople =
     query === ""
       ? people
       : people.filter((person) =>
           person.name
+            .toLowerCase()
+            .replace(/\s+/g, "")
+            .includes(query.toLowerCase().replace(/\s+/g, ""))
+        );
+
+  const filteredCat =
+    query === ""
+      ? cat
+      : cat.filter((person) =>
+          cat.name
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""))
@@ -137,226 +153,233 @@ const TodoItem = ({
           </button>
         </div>
       </div>
-      <Modal isOpen={editIsShowing}>
-        <form
-          onSubmit={(e) => handleChanges(e)}
-          className="mt-16 mx-auto max-w-2xl"
-        >
-          <div>
-            <label
-              for="name"
-              class="block text-sm font-medium leading-5 text-gray-700"
-            >
-              Name
-            </label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <input
-                id="name"
-                ref={nameRef}
-                defaultValue={todo.name}
-                class="form-input block w-full sm:text-sm sm:leading-5"
-              />
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
+      <div className="flex">
+        <Modal isOpen={editIsShowing}>
+          <form
+            onSubmit={(e) => handleChanges(e)}
+            className="mt-16 mx-auto max-w-2xl"
+          >
             <div>
-              <label>Categories</label>
-              <br />
-              <Menu as="div" className="relative inline-block text-left my-4">
-                <div>
-                  <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
-                    Task
-                    <ChevronDownIcon
-                      className="-mr-1 ml-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                </div>
-
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active
-                                ? "bg-gray-100 text-gray-900"
-                                : "text-gray-700",
-                              "block px-4 py-2 text-sm"
-                            )}
-                          >
-                            Bug
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active
-                                ? "bg-gray-100 text-gray-900"
-                                : "text-gray-700",
-                              "block px-4 py-2 text-sm"
-                            )}
-                          >
-                            Task
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active
-                                ? "bg-gray-100 text-gray-900"
-                                : "text-gray-700",
-                              "block px-4 py-2 text-sm"
-                            )}
-                          >
-                            Story
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-            </div>
-            <div>
-              <div className="relative inline-block text-left my-4">
-                <label>Assign To</label>
-                <Combobox value={selected} onChange={setSelected}>
-                  <div className="relative mt-1">
-                    <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                      <Combobox.Input
-                        className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                        displayValue={(person) => person.name}
-                        onChange={(event) => setQuery(event.target.value)}
-                      />
-                      <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-                        <SelectorIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </Combobox.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                      afterLeave={() => setQuery("")}
-                    >
-                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {filteredPeople.length === 0 && query !== "" ? (
-                          <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                            Nothing found.
-                          </div>
-                        ) : (
-                          filteredPeople.map((person) => (
-                            <Combobox.Option
-                              key={person.id}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                                  active
-                                    ? "bg-teal-600 text-white"
-                                    : "text-gray-900"
-                                }`
-                              }
-                              value={person}
-                            >
-                              {({ selected, active }) => (
-                                <>
-                                  <span
-                                    className={`block truncate ${
-                                      selected ? "font-medium" : "font-normal"
-                                    }`}
-                                  >
-                                    {person.name}
-                                  </span>
-                                  {selected ? (
-                                    <span
-                                      className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                        active ? "text-white" : "text-teal-600"
-                                      }`}
-                                    >
-                                      <CheckIcon
-                                        className="h-5 w-5"
-                                        aria-hidden="true"
-                                      />
-                                    </span>
-                                  ) : null}
-                                </>
-                              )}
-                            </Combobox.Option>
-                          ))
-                        )}
-                      </Combobox.Options>
-                    </Transition>
-                  </div>
-                </Combobox>
+              <label
+                for="name"
+                class="block text-sm font-medium leading-5 text-gray-700"
+              >
+                Name
+              </label>
+              <div class="mt-1 relative rounded-md shadow-sm">
+                <input
+                  id="name"
+                  ref={nameRef}
+                  defaultValue={todo.name}
+                  class="form-input block w-full sm:text-sm sm:leading-5"
+                />
               </div>
             </div>
-          </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div className="relative inline-block text-left my-4">
+                  <label>Categories</label>
+                  <br />
+                  <Combobox value={selectedcat} onChange={setSelectedcat}>
+                    <div className="relative mt-1">
+                      <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                        <Combobox.Input
+                          className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                          displayValue={(cat) => cat.name}
+                          onChange={(event) => setQuerycat(event.target.value)}
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <SelectorIcon
+                            className="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        </Combobox.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                        afterLeave={() => setQuerycat("")}
+                      >
+                        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {filteredCat.length === 0 && querycat !== "" ? (
+                            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                              Nothing found.
+                            </div>
+                          ) : (
+                            filteredCat.map((person) => (
+                              <Combobox.Option
+                                key={person.id}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active
+                                      ? "bg-teal-600 text-white"
+                                      : "text-gray-900"
+                                  }`
+                                }
+                                value={person}
+                              >
+                                {({ selected, active }) => (
+                                  <>
+                                    <span
+                                      className={`block truncate ${
+                                        selected ? "font-medium" : "font-normal"
+                                      }`}
+                                    >
+                                      {person.name}
+                                    </span>
+                                    {selected ? (
+                                      <span
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                          active
+                                            ? "text-white"
+                                            : "text-teal-600"
+                                        }`}
+                                      >
+                                        <CheckIcon
+                                          className="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    ) : null}
+                                  </>
+                                )}
+                              </Combobox.Option>
+                            ))
+                          )}
+                        </Combobox.Options>
+                      </Transition>
+                    </div>
+                  </Combobox>
+                </div>
+              </div>
 
-          <div className="mt-8">
-            <label
-              for="description"
-              class="block text-sm font-medium leading-5 text-gray-700"
-            >
-              Description
-            </label>
-
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <textarea
-                id="description"
-                ref={descRef}
-                class="form-input block w-full sm:text-sm sm:leading-5"
-                defaultValue={todo.description}
-                placeholder="Enter a description here"
-              />
+              <div>
+                <div className="relative inline-block text-left my-4">
+                  <label>Assign To</label>
+                  <Combobox value={selected} onChange={setSelected}>
+                    <div className="relative mt-1">
+                      <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                        <Combobox.Input
+                          className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                          displayValue={(person) => person.name}
+                          onChange={(event) => setQuery(event.target.value)}
+                        />
+                        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+                          <SelectorIcon
+                            className="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        </Combobox.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        leave="transition ease-in duration-100"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                        afterLeave={() => setQuery("")}
+                      >
+                        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {filteredCat.length === 0 && query !== "" ? (
+                            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                              Nothing found.
+                            </div>
+                          ) : (
+                            filteredPeople.map((person) => (
+                              <Combobox.Option
+                                key={person.id}
+                                className={({ active }) =>
+                                  `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                    active
+                                      ? "bg-teal-600 text-white"
+                                      : "text-gray-900"
+                                  }`
+                                }
+                                value={person}
+                              >
+                                {({ selected, active }) => (
+                                  <>
+                                    <span
+                                      className={`block truncate ${
+                                        selected ? "font-medium" : "font-normal"
+                                      }`}
+                                    >
+                                      {person.name}
+                                    </span>
+                                    {selected ? (
+                                      <span
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                          active
+                                            ? "text-white"
+                                            : "text-teal-600"
+                                        }`}
+                                      >
+                                        <CheckIcon
+                                          className="h-5 w-5"
+                                          aria-hidden="true"
+                                        />
+                                      </span>
+                                    ) : null}
+                                  </>
+                                )}
+                              </Combobox.Option>
+                            ))
+                          )}
+                        </Combobox.Options>
+                      </Transition>
+                    </div>
+                  </Combobox>
+                </div>
+              </div>
             </div>
-            <label
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-              for="file_input"
-            >
-              Upload file
-            </label>
-            <input
-              class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-              id="file_input"
-              type="file"
-            />
-            <div>Created By</div>
-          </div>
-          <div className="mt-8 flex justify-end">
-            <button
-              onClick={() => setEditIsShowing(false)}
-              className="flex-grow-0 flex justify-center ml-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md border-gray-500 hover:bg-gray-100 focus:outline-none focus:border-gray-900 focus:shadow-outline-red active:bg-gray-700 transition duration-150 ease-in-out"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-grow-0 flex justify-center ml-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-red active:bg-blue-700 transition duration-150 ease-in-out"
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </Modal>
+            <div className="mt-8">
+              <label
+                for="description"
+                class="block text-sm font-medium leading-5 text-gray-700"
+              >
+                Description
+              </label>
+
+              <div class="mt-1 relative rounded-md shadow-sm">
+                <textarea
+                  id="description"
+                  ref={descRef}
+                  class="form-input block w-full sm:text-sm sm:leading-5"
+                  defaultValue={todo.description}
+                  placeholder="Enter a description here"
+                />
+              </div>
+              <label
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                for="file_input"
+              >
+                Upload file
+              </label>
+              <input
+                class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                id="file_input"
+                type="file"
+              />
+              <div>Created By</div>
+            </div>
+            <div className="mt-8 flex justify-end">
+              <button
+                onClick={() => setEditIsShowing(false)}
+                className="flex-grow-0 flex justify-center ml-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md border-gray-500 hover:bg-gray-100 focus:outline-none focus:border-gray-900 focus:shadow-outline-red active:bg-gray-700 transition duration-150 ease-in-out"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-grow-0 flex justify-center ml-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-red active:bg-blue-700 transition duration-150 ease-in-out"
+              >
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </Modal>
+      </div>
     </div>
   );
 };
