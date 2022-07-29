@@ -1,0 +1,23 @@
+{
+  "name": "alecta_jira",
+  "version": "1.0.0",
+  "description": "jira",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "muttala_install" : "cd AVJira && python -m venv venv && cd venv/Scripts && activate && cd ../.. && pip install -r requirements.txt && cd ../client-app && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alecta-ventures/alecta_jira.git"
+  },
+  "keywords": [
+    "jira"
+  ],
+  "author": "trimurthy of alecta ventures",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alecta-ventures/alecta_jira/issues"
+  },
+  "homepage": "https://github.com/alecta-ventures/alecta_jira#readme"
+}
