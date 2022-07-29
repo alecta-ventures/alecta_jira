@@ -391,20 +391,24 @@ const AddTaskForm = ({ stage, stageIndex, board, setBoard }) => {
 
   const addNewTask = async (e, stageIndex) => {
     e.preventDefault();
-    const task = await authenticatedFetch(
-      `http://localhost:8000/projects/${projectId}/todos/`,
-      "POST",
-      user,
-      setUser,
-      {
-        name: nameRef.current.value,
-        stage: stage,
-      }
-    );
-    const newState = [...board];
-    newState[stageIndex].push(task);
-    setBoard(newState);
-
+    if(nameRef.current.value !== null && nameRef.current.value !== undefined && nameRef.current.value !== ""){
+      const task = await authenticatedFetch(
+        `http://localhost:8000/projects/${projectId}/todos/`,
+        "POST",
+        user,
+        setUser,
+        {
+          name: nameRef.current.value,
+          stage: stage,
+        }
+      );
+      const newState = [...board];
+      newState[stageIndex].push(task);
+      setBoard(newState);
+    }
+    else {
+      alert("Cannot be empty")
+    }
     nameRef.current.value = "";
   };
 
