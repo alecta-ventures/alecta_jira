@@ -182,7 +182,7 @@ const TodoItem = ({
                   <br />
                   <Combobox value={selectedcat} onChange={setSelectedcat}>
                     <div className="relative mt-1">
-                      <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                      <div className=" w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                         <Combobox.Input
                           className="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
                           displayValue={(person) => person.name}
@@ -204,7 +204,7 @@ const TodoItem = ({
                       >
                         <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                           {filteredCat.length === 0 && querycat !== "" ? (
-                            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                            <div className="absolute cursor-default select-none py-2 px-4 text-gray-700">
                               Nothing found.
                             </div>
                           ) : (
@@ -231,7 +231,7 @@ const TodoItem = ({
                                     </span>
                                     {selected ? (
                                       <span
-                                        className={`relative inset-y-0 left-0 flex items-center pl-3 ${
+                                        className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
                                           active
                                             ? "text-white"
                                             : "text-teal-600"
@@ -280,8 +280,8 @@ const TodoItem = ({
                         leaveTo="opacity-0"
                         afterLeave={() => setQuery("")}
                       >
-                        <Combobox.Options className="relative mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                          {filteredCat.length === 0 && query !== "" ? (
+                        <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                          {filteredPeople.length === 0 && query !== "" ? (
                             <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                               Nothing found.
                             </div>
@@ -333,7 +333,7 @@ const TodoItem = ({
                 </div>
               </div>
             </div>
-            <div className="mt-8 relative">
+            <div className="mt-8">
               <label
                 for="description"
                 class="block text-sm font-medium leading-5 text-gray-700"
@@ -341,7 +341,7 @@ const TodoItem = ({
                 Description
               </label>
 
-              <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="mt-1 rounded-md shadow-sm">
                 <textarea
                   id="description"
                   ref={descRef}
